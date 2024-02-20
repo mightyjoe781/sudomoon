@@ -1,0 +1,22 @@
+main {
+	font-family: 'IBM Plex Mono', monospace, sans-serif;
+	margin: 0 auto;
+	padding: 20px;
+	padding-top: 0;
+	max-width: 800px;
+}
+
+h2 {
+	margin: 0;
+	margin-top: 60px;
+}
+
+.quick-links ul {
+	padding: 0;
+	margin-top: -20px;
+	margin-left: 4ch;
+	list-style-type: none;
+
+	& li { padding: 2px 0; }
+	& a { display: inline-block; }
+}

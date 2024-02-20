@@ -24,21 +24,7 @@ html {
 }
 body {
 	margin: 0;
-	padding: 0;
-	text-align: left;
-	background: linear-gradient(var(--gray-gradient)) no-repeat;
-	background-size: 100% 600px;
-	word-wrap: break-word;
-	overflow-wrap: break-word;
-	color: rgb(var(--gray-dark));
-	font-size: 20px;
-	line-height: 1.7;
-}
-main {
-	width: 720px;
-	max-width: calc(100% - 2em);
-	margin: auto;
-	padding: 3em 1em;
+	line-height: 1.8;
 }
 h1, h2, h3, h4, h5, h6 {
 	font-weight: 600;
@@ -48,10 +34,6 @@ h1 {
 }
 h2 {
 	line-height: 1.5;
-}
-strong,
-b {
-	font-weight: 700;
 }
 a {
 	color: #6741d9;
@@ -74,41 +56,16 @@ a {
 	&::before { content: '['; }
 	&::after { content: ']'; }
 }
-a:hover {
-	color: var(--accent);
+::selection {
+	background: #adb5bd9b;
 }
-p {
-	margin-bottom: 1em;
+p, ul:no(li ul), ol:not(li ol), pre, .code-block {
+	margin: 20px 0;
 }
-.prose p {
-	margin-bottom: 2em;
-}
-textarea {
-	width: 100%;
-	font-size: 16px;
-}
-input {
-	font-size: 16px;
-}
-table {
-	width: 100%;
-}
-img {
+img, video {
 	max-width: 100%;
 	height: auto;
-	border-radius: 8px;
-}
-code {
-	padding: 2px 5px;
-	background-color: rgb(var(--gray-light));
-	border-radius: 2px;
-}
-pre {
-	padding: 1.5em;
-	border-radius: 8px;
-}
-pre > code {
-	all: unset;
+	display: block;
 }
 blockquote {
 	background: #e9ecef;
@@ -127,14 +84,6 @@ hr {
 	background: #ced4da;
 	border: none;
 	margin: 40px 0;
-}
-@media (max-width: 720px) {
-	body {
-		font-size: 18px;
-	}
-	main {
-		padding: 1em;
-	}
 }
 
 .sr-only {
