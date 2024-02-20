@@ -16,7 +16,7 @@ const rehypeExternalLinksConfig = [
 export default defineConfig({
 	site: 'https://sudhanshu.dev',
 	trailingSlash: 'never',
-	output: 'server',
+	// output: 'server', should add an adapter for this option
 	integrations: [mdx({
 		rehypePlugins: [rehypeExternalLinksConfig, rehypePresetMinify]
 	}), 
