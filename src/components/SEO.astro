@@ -1,0 +1,34 @@
+---
+interface Props {
+    title?: string;
+    description?: string;
+}
+const { title, description } = Astro.props;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+---
+
+<title>{title ? `${title} | sudomoon!` : `sudomoon!`}</title>
+<meta property="og:title" content={title ?? "sudomoon!"} />
+<meta property="og:site_name" content="sudomoon" />
+
+<meta name="description" content={description} />
+<meta property="og:description" content={description} />
+
+<meta property="og:url" content={canonicalURL} />
+<link rel="canonical" content={canonicalURL} />
+
+<meta name="robots" content="index,follow" />
+<meta name="googlebot" content="index,follow" />
+<meta name="facebook:site" content="@sudomoon" />
+<meta name="facebook:creator" content="@sudomoon" />
+<!-- <meta property='og:type' content={article ? 'article' : 'website'} /> -->
+<meta property="og:locale" content="en_US" />
+
+<meta
+    name="keywords"
+    content="sudomoon,smk,Sudhanshu,website,personal,portfolio,projects,about,contact,info,developer,resume"
+/>
+<meta name="theme-color" content="#0e7dde" />
+<link rel="icon" href="https://media.minetest.in/logos/pfp.png" />
+
+<link rel="sitemap" href="/sitemap-index.xml" />

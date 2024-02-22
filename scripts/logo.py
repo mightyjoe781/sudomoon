@@ -32,5 +32,3 @@ draw.text((x, y), text, font=font, fill=text_color)
 
 # Save the image
 image.save("public/logos/pfp.png")
-
-
