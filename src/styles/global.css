@@ -20,7 +20,7 @@
 }
 
 html {
-	background: #f8f9fa;
+	background: #f9fefe;
 }
 body {
 	margin: 0;
@@ -37,6 +37,7 @@ h2 {
 }
 a {
 	color: #6741d9;
+
 	text-decoration: none;
 
 	&:hover, &.scrollspy-active {

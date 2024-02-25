@@ -8,7 +8,7 @@ main {
 
 h2 {
 	margin: 0;
-	margin-top: 60px;
+	margin-top: 40px;
 }
 
 .quick-links ul {
@@ -17,6 +17,57 @@ h2 {
 	margin-left: 4ch;
 	list-style-type: none;
 
-	& li { padding: 2px 0; }
+	& li { padding: 1px 0; }
 	& a { display: inline-block; }
+}
+
+.player_gallery_wrapper {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	grid-auto-rows: minmax(100px, auto);
+}
+
+/* .mt_player {
+	padding: 3px;
+	width: 400px;
+	height: 200px;
+}
+*/
+
+.player_gallery_wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px,1fr));
+    grid-auto-rows: minmax(100px, auto);
+	
+	.player_container {
+		position: relative;
+		margin: 5px;
+		border-radius: 10px;
+		overflow: hidden;
+	}
+	
+	.mt_player {
+		padding: 3px;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+	
+	.player_caption {
+		position: absolute;
+		text-align: center;
+		font-size: small;
+		bottom: 0;
+		width: 100%;
+		background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+		color: white;
+		padding: 5px;
+		margin: 0;
+	}
+	margin-bottom: 4px;
+}
+@media screen and (max-width: 300px) {
+    .player_gallery_wrapper {
+        grid-template-columns: repeat(1, 1fr);
+    }
 }
