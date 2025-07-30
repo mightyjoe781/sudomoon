@@ -221,3 +221,9 @@ main p:nth-of-type(2) {
         gap: var(--space-md);
     }
 }
+
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+	.quick-links ul {
+		grid-template-columns: 1fr 1fr !important;
+	}
+}
