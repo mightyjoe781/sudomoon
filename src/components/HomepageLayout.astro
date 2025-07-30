@@ -12,7 +12,7 @@ import SEO from "./SEO.astro";
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
-            href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&display=swap"
+            href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Inter:wght@400;500;600&display=swap"
             rel="stylesheet"
         />
         <SEO
@@ -20,8 +20,118 @@ import SEO from "./SEO.astro";
         />
     </head>
     <body>
-        <main>
-            <slot />
-        </main>
+        <div class="container">
+            <main>
+                <slot />
+            </main>
+        </div>
+        
+        <!-- Smooth scroll to top button -->
+        <button id="scroll-to-top" class="scroll-to-top" aria-label="Scroll to top">
+            ↑
+        </button>
+        
+        <script>
+            // Smooth scroll to top functionality
+            const scrollToTopBtn = document.getElementById('scroll-to-top');
+            
+            if (scrollToTopBtn) {
+                window.addEventListener('scroll', () => {
+                    if (window.pageYOffset > 300) {
+                        scrollToTopBtn.classList.add('visible');
+                    } else {
+                        scrollToTopBtn.classList.remove('visible');
+                    }
+                });
+                
+                scrollToTopBtn.addEventListener('click', () => {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                });
+            }
+            
+            // Intersection Observer for section highlighting
+            const sections = document.querySelectorAll('h2[id]');
+            const navLinks = document.querySelectorAll('.quick-links a[href^="#"]');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => link.classList.remove('active'));
+                        const activeLink = document.querySelector(`.quick-links a[href="#${entry.target.id}"]`);
+                        if (activeLink) {
+                            activeLink.classList.add('active');
+                        }
+                    }
+                });
+            }, {
+                rootMargin: '-20% 0px -80% 0px'
+            });
+            
+            sections.forEach((section) => {
+                observer.observe(section);
+            });
+        </script>
+        
+        <style>
+            .container {
+                min-height: 100vh;
+                background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 25%, #f8f9fa 50%, #ffffff 100%);
+                position: relative;
+            }
+            
+            .container::before {
+                content: '';
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background:
+                    radial-gradient(circle at 20% 50%, rgba(103, 65, 217, 0.05) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(77, 171, 247, 0.05) 0%, transparent 50%),
+                    radial-gradient(circle at 40% 80%, rgba(255, 140, 66, 0.05) 0%, transparent 50%);
+                pointer-events: none;
+                z-index: -1;
+            }
+            
+            .scroll-to-top {
+                position: fixed;
+                bottom: 2rem;
+                right: 2rem;
+                width: 3rem;
+                height: 3rem;
+                background: var(--bg-gradient);
+                color: var(--text-light);
+                border: none;
+                border-radius: 50%;
+                cursor: pointer;
+                font-size: var(--font-lg);
+                font-weight: 600;
+                box-shadow: var(--shadow-lg);
+                transform: translateY(100px);
+                opacity: 0;
+                transition: var(--transition-base);
+                z-index: 100;
+            }
+            
+            .scroll-to-top.visible {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            
+            .scroll-to-top:hover {
+                transform: translateY(-2px) scale(1.1);
+                box-shadow: var(--shadow-xl);
+            }
+            
+            .quick-links a.active {
+                background: var(--primary-purple) !important;
+                color: var(--text-light) !important;
+                border-color: var(--primary-purple-light) !important;
+            }
+        </style>
     </body>
 </html>
