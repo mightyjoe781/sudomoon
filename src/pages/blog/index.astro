@@ -7,105 +7,357 @@ import { getCollection } from 'astro:content';
 import FormattedDate from '../../components/FormattedDate.astro';
 
 const posts = (await getCollection('blog')).sort(
-	(a, b) => a.data.pubDate.valueOf() - b.data.pubDate.valueOf()
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
+
+const allTags = [...new Set(posts.flatMap(p => p.data.tags ?? []))].sort();
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<BaseHead title={`Blog · ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
 		<style>
-			main {
-				width: 960px;
+			body { background: #ffffff; }
+
+			.blog-main {
+				max-width: 860px;
+				margin: 0 auto;
+				padding: 3rem 1.5rem 5rem;
 			}
-			ul {
+
+			.blog-header {
+				margin-bottom: 2.5rem;
+			}
+
+			.blog-header h1 {
+				font-size: 2rem;
+				font-weight: 700;
+				color: #1a1a2e;
+				margin: 0 0 0.5rem;
+				font-family: 'Inter', -apple-system, sans-serif;
+			}
+
+			.blog-header p {
+				color: #6b7280;
+				font-size: 1rem;
+				margin: 0;
+				font-family: 'Inter', -apple-system, sans-serif;
+			}
+
+			.blog-controls {
 				display: flex;
+				gap: 1rem;
+				margin-bottom: 2rem;
 				flex-wrap: wrap;
-				gap: 2rem;
-				list-style-type: none;
+			}
+
+			.search-input {
+				flex: 1;
+				min-width: 200px;
+				padding: 0.6rem 1rem;
+				border: 1px solid #e5e7eb;
+				border-radius: 8px;
+				font-size: 0.9375rem;
+				font-family: 'Inter', -apple-system, sans-serif;
+				color: #1a1a2e;
+				background: #fafafa;
+				outline: none;
+				transition: border-color 0.15s;
+			}
+
+			.search-input:focus {
+				border-color: #6741d9;
+				background: #fff;
+			}
+
+			.sort-select {
+				padding: 0.6rem 1rem;
+				border: 1px solid #e5e7eb;
+				border-radius: 8px;
+				font-size: 0.9375rem;
+				font-family: 'IBM Plex Mono', monospace;
+				color: #1a1a2e;
+				background: #fafafa;
+				cursor: pointer;
+				outline: none;
+			}
+
+			.sort-select:focus {
+				border-color: #6741d9;
+			}
+
+			.posts-list {
+				display: flex;
+				flex-direction: column;
+				gap: 0;
+				list-style: none;
 				margin: 0;
 				padding: 0;
 			}
-			ul li {
-				width: calc(50% - 1rem);
+
+			.post-card {
+				display: flex !important;
+				gap: 1.5rem;
+				padding: 1.5rem 0;
+				border-bottom: 1px solid #f0f0f4;
+				align-items: flex-start;
+				text-decoration: none !important;
+				color: inherit !important;
+				background: none !important;
+				transform: none !important;
+				box-shadow: none !important;
+				border-radius: 0 !important;
 			}
-			ul li * {
-				text-decoration: none;
-				transition: 0.2s ease;
+
+			.post-card::before,
+			.post-card::after {
+				display: none !important;
 			}
-			ul li:first-child {
-				width: 100%;
-				margin-bottom: 1rem;
-				text-align: center;
+
+			.post-card:hover {
+				background: none !important;
+				transform: none !important;
+				box-shadow: none !important;
+				color: inherit !important;
 			}
-			ul li:first-child img {
-				width: 100%;
+
+			.post-card:hover .post-title {
+				color: #6741d9;
 			}
-			ul li:first-child .title {
-				font-size: 2.369rem;
+
+			.post-thumb {
+				width: 120px;
+				min-width: 120px;
+				height: 80px;
+				border-radius: 8px;
+				object-fit: cover;
+				background: #f4f4f8;
+				border: 1px solid #e5e7eb;
 			}
-			ul li img {
-				margin-bottom: 0.5rem;
-				border-radius: 12px;
+
+			.post-thumb-placeholder {
+				width: 120px;
+				min-width: 120px;
+				height: 80px;
+				border-radius: 8px;
+				background: linear-gradient(135deg, #f4f4f8, #e9ecef);
+				border: 1px solid #e5e7eb;
 			}
-			ul li a {
+
+			.post-meta {
+				flex: 1;
+				min-width: 0;
+			}
+
+			.post-date {
+				font-family: 'IBM Plex Mono', monospace;
+				font-size: 0.78rem;
+				color: #6741d9;
+				margin-bottom: 0.4rem;
 				display: block;
 			}
-			.title {
+
+			.post-title {
+				font-size: 1.125rem;
+				font-weight: 600;
+				color: #1a1a2e;
+				margin: 0 0 0.4rem;
+				line-height: 1.35;
+				font-family: 'Inter', -apple-system, sans-serif;
+				transition: color 0.15s;
+			}
+
+			.post-desc {
+				font-size: 0.9375rem;
+				color: #6b7280;
 				margin: 0;
-				color: rgb(var(--black));
-				line-height: 1;
+				line-height: 1.5;
+				font-family: 'Inter', -apple-system, sans-serif;
+				overflow: hidden;
+				display: -webkit-box;
+				-webkit-line-clamp: 2;
+				-webkit-box-orient: vertical;
 			}
-			.date {
-				margin: 0;
-				color: rgb(var(--gray));
+
+			.no-results {
+				text-align: center;
+				color: #9ca3af;
+				padding: 3rem 0;
+				font-family: 'IBM Plex Mono', monospace;
+				font-size: 0.9rem;
+				display: none;
 			}
-			ul li a:hover h4,
-			ul li a:hover .date {
-				color: rgb(var(--accent));
+
+			/* Tag filter */
+			.tag-filters {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.5rem;
+				margin-bottom: 2rem;
 			}
-			ul a:hover img {
-				box-shadow: var(--box-shadow);
+
+			.tag-btn {
+				padding: 0.3rem 0.75rem;
+				border-radius: 999px;
+				border: 1px solid #e5e7eb;
+				background: #fafafa;
+				color: #4b5563;
+				font-family: 'IBM Plex Mono', monospace;
+				font-size: 0.78rem;
+				cursor: pointer;
+				transition: background 0.15s, border-color 0.15s, color 0.15s;
+				line-height: 1.4;
 			}
-			@media (max-width: 720px) {
-				ul {
-					gap: 0.5em;
-				}
-				ul li {
-					width: 100%;
-					text-align: center;
-				}
-				ul li:first-child {
-					margin-bottom: 0;
-				}
-				ul li:first-child .title {
-					font-size: 1.563em;
-				}
+
+			.tag-btn:hover,
+			.tag-btn.active {
+				background: #6741d9;
+				border-color: #6741d9;
+				color: #fff;
+			}
+
+			/* Tag pills on cards */
+			.post-tags {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.35rem;
+				margin-top: 0.5rem;
+			}
+
+			.post-tag {
+				font-family: 'IBM Plex Mono', monospace;
+				font-size: 0.7rem;
+				color: #6741d9;
+				background: rgba(103,65,217,0.07);
+				border-radius: 999px;
+				padding: 0.15rem 0.55rem;
+				line-height: 1.5;
+			}
+
+			@media (max-width: 540px) {
+				.post-thumb, .post-thumb-placeholder { display: none; }
+				.blog-controls { flex-direction: column; }
 			}
 		</style>
 	</head>
 	<body>
 		<Header />
-		<main>
-			<section>
-				<ul>
-					{
-						posts.map((post) => (
-							<li>
-								<a href={`/blog/${post.slug}/`}>
-									<img width={720} height={360} src={post.data.heroImage} alt="" />
-									<h4 class="title">{post.data.title}</h4>
-									<p class="date">
-										<FormattedDate date={post.data.pubDate} />
-									</p>
-								</a>
-							</li>
-						))
-					}
-				</ul>
-			</section>
+		<main class="blog-main">
+			<div class="blog-header">
+				<h1>Blog</h1>
+				<p>Notes on systems programming, open source, and things I've figured out the hard way.</p>
+			</div>
+
+			<div class="blog-controls">
+				<input
+					type="search"
+					id="search"
+					class="search-input"
+					placeholder="Search posts..."
+					aria-label="Search posts"
+				/>
+				<select id="sort" class="sort-select" aria-label="Sort posts">
+					<option value="newest">Newest first</option>
+					<option value="oldest">Oldest first</option>
+					<option value="az">Title A → Z</option>
+					<option value="za">Title Z → A</option>
+				</select>
+			</div>
+
+			<div class="tag-filters" id="tag-filters">
+				<button class="tag-btn active" data-tag="">All</button>
+				{allTags.map(tag => (
+					<button class="tag-btn" data-tag={tag}>{tag}</button>
+				))}
+			</div>
+
+			<ul class="posts-list" id="posts-list">
+				{posts.map((post) => (
+					<li
+						data-title={post.data.title.toLowerCase()}
+						data-desc={post.data.description?.toLowerCase() ?? ''}
+						data-date={post.data.pubDate.valueOf()}
+						data-tags={JSON.stringify(post.data.tags ?? [])}
+					>
+						<a href={`/blog/${post.slug}/`} class="post-card">
+							{post.data.heroImage
+								? <img class="post-thumb" src={post.data.heroImage} alt="" width="120" height="80" />
+								: <div class="post-thumb-placeholder"></div>
+							}
+							<div class="post-meta">
+								<span class="post-date"><FormattedDate date={post.data.pubDate} /></span>
+								<h2 class="post-title">{post.data.title}</h2>
+								{post.data.description && <p class="post-desc">{post.data.description}</p>}
+								{post.data.tags && post.data.tags.length > 0 && (
+									<div class="post-tags">
+										{post.data.tags.map(tag => <span class="post-tag">{tag}</span>)}
+									</div>
+								)}
+							</div>
+						</a>
+					</li>
+				))}
+			</ul>
+			<p class="no-results" id="no-results">No posts match your search.</p>
 		</main>
 		<Footer />
+
+		<script>
+			const searchInput = document.getElementById('search') as HTMLInputElement;
+			const sortSelect = document.getElementById('sort') as HTMLSelectElement;
+			const list = document.getElementById('posts-list') as HTMLUListElement;
+			const noResults = document.getElementById('no-results') as HTMLParagraphElement;
+			const tagBtns = Array.from(document.querySelectorAll<HTMLButtonElement>('#tag-filters .tag-btn'));
+
+			let activeTag = '';
+
+			function getItems() {
+				return Array.from(list.querySelectorAll<HTMLLIElement>('li'));
+			}
+
+			function applyFilters() {
+				const query = searchInput.value.toLowerCase().trim();
+				const sortVal = sortSelect.value;
+
+				let items = getItems();
+
+				// Filter
+				items.forEach(item => {
+					const title = item.dataset.title ?? '';
+					const desc = item.dataset.desc ?? '';
+					const tags: string[] = JSON.parse(item.dataset.tags ?? '[]');
+					const textMatch = !query || title.includes(query) || desc.includes(query);
+					const tagMatch = !activeTag || tags.includes(activeTag);
+					item.style.display = textMatch && tagMatch ? '' : 'none';
+				});
+
+				// Sort visible items
+				const visible = items.filter(i => i.style.display !== 'none');
+				visible.sort((a, b) => {
+					if (sortVal === 'newest') return Number(b.dataset.date) - Number(a.dataset.date);
+					if (sortVal === 'oldest') return Number(a.dataset.date) - Number(b.dataset.date);
+					if (sortVal === 'az') return (a.dataset.title ?? '').localeCompare(b.dataset.title ?? '');
+					if (sortVal === 'za') return (b.dataset.title ?? '').localeCompare(a.dataset.title ?? '');
+					return 0;
+				});
+				visible.forEach(item => list.appendChild(item));
+
+				noResults.style.display = visible.length === 0 ? 'block' : 'none';
+			}
+
+			tagBtns.forEach(btn => {
+				btn.addEventListener('click', () => {
+					activeTag = btn.dataset.tag ?? '';
+					tagBtns.forEach(b => b.classList.toggle('active', b.dataset.tag === activeTag));
+					applyFilters();
+				});
+			});
+
+			searchInput.addEventListener('input', applyFilters);
+			sortSelect.addEventListener('change', applyFilters);
+		</script>
 	</body>
 </html>
+
+

@@ -7,49 +7,158 @@ import FormattedDate from '../components/FormattedDate.astro';
 
 type Props = CollectionEntry<'blog'>['data'];
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, tags } = Astro.props;
 ---
 
 <html lang="en">
 	<head>
 		<BaseHead title={title} description={description} />
 		<style>
+			body {
+				background: #ffffff;
+			}
 			main {
-				width: calc(100% - 2em);
-				max-width: 100%;
-				margin: 0;
+				width: 100%;
+				max-width: 720px;
+				margin: 0 auto;
+				padding: 2rem 1.5rem 4rem;
+				box-sizing: border-box;
 			}
 			.hero-image {
 				width: 100%;
+				margin-bottom: 2.5rem;
+				text-align: center;
 			}
 			.hero-image img {
-				display: block;
-				margin: 0 auto;
+				display: inline-block;
+				max-height: 280px;
+				width: auto;
+				max-width: 100%;
 				border-radius: 12px;
-				box-shadow: var(--box-shadow);
+				box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+				object-fit: contain;
 			}
 			.prose {
-				width: 720px;
-				max-width: calc(100% - 2em);
-				margin: auto;
-				padding: 1em;
-				color: rgb(var(--gray-dark));
+				width: 100%;
+				color: #1a1a2e;
+				font-family: 'Inter', -apple-system, sans-serif;
+				font-size: 1.0625rem;
+				line-height: 1.8;
+			}
+			.prose h1, .prose h2, .prose h3 {
+				font-family: 'Inter', -apple-system, sans-serif;
+			}
+			.prose h2 {
+				font-size: 1.35rem;
+				margin-top: 2.5rem;
+				margin-bottom: 0.75rem;
+				color: #1a1a2e;
+			}
+			.prose h2::after {
+				display: none;
+			}
+			.prose p {
+				font-size: 1.0625rem;
+				color: #374151;
+				margin-bottom: 1.1rem;
+			}
+			.prose a {
+				color: #6741d9;
+				border-bottom: 1px solid rgba(103,65,217,0.3);
+				padding: 0;
+				display: inline;
+				background: none;
+				transform: none;
+				box-shadow: none;
+			}
+			.prose a:hover {
+				color: #6741d9;
+				background: none;
+				border-bottom-color: #6741d9;
+				transform: none;
+				box-shadow: none;
+			}
+			.prose a::before {
+				display: none;
+			}
+			.prose a::after {
+				display: none;
+			}
+			.prose pre {
+				background: #f4f4f8;
+				border: 1px solid #e5e7eb;
+				border-radius: 8px;
+				padding: 1.25rem 1.5rem;
+				overflow-x: auto;
+				font-size: 0.9rem;
+				line-height: 1.6;
+				margin: 1.5rem 0;
+			}
+			.prose code {
+				font-family: 'IBM Plex Mono', monospace;
+				font-size: 0.875em;
+				background: #f4f4f8;
+				border-radius: 4px;
+				padding: 0.1em 0.4em;
+			}
+			.prose pre code {
+				background: none;
+				padding: 0;
+				font-size: inherit;
+			}
+			.prose ul, .prose ol {
+				padding-left: 1.5rem;
+				margin-bottom: 1rem;
+			}
+			.prose ul {
+				list-style-type: disc;
+			}
+			.prose li {
+				color: #374151;
+				margin-bottom: 0.4rem;
+				line-height: 1.7;
+			}
+			.prose hr {
+				border: none;
+				border-top: 1px solid #e5e7eb;
+				margin: 1.5rem 0;
 			}
 			.title {
-				margin-bottom: 1em;
-				padding: 1em 0;
+				margin-bottom: 2rem;
+				padding: 1rem 0;
 				text-align: center;
-				line-height: 1;
 			}
 			.title h1 {
 				margin: 0 0 0.5em 0;
+				font-size: 1.875rem;
+				line-height: 1.25;
+				color: #1a1a2e;
+				font-family: 'Inter', -apple-system, sans-serif;
 			}
 			.date {
 				margin-bottom: 0.5em;
-				color: rgb(var(--gray));
+				color: #6b7280;
+				font-family: 'IBM Plex Mono', monospace;
+				font-size: 0.85rem;
 			}
 			.last-updated-on {
 				font-style: italic;
+			}
+			.post-tags {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.4rem;
+				justify-content: center;
+				margin-top: 0.75rem;
+			}
+			.post-tag {
+				font-family: 'IBM Plex Mono', monospace;
+				font-size: 0.75rem;
+				color: #6741d9;
+				background: rgba(103,65,217,0.07);
+				border-radius: 999px;
+				padding: 0.2rem 0.65rem;
+				line-height: 1.5;
 			}
 		</style>
 	</head>
@@ -74,6 +183,11 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 							}
 						</div>
 						<h1>{title}</h1>
+						{tags && tags.length > 0 && (
+							<div class="post-tags">
+								{tags.map((tag: string) => <span class="post-tag">{tag}</span>)}
+							</div>
+						)}
 						<hr />
 					</div>
 					<slot />
