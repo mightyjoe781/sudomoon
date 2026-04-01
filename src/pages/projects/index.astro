@@ -46,23 +46,36 @@ const allProjects = (await getCollection('projects')).sort(
     <Footer />
 
     <script>
-      const tabs = document.querySelectorAll('.filter-tab');
-      const cards = document.querySelectorAll('.project-card-wrapper');
+      function initProjects() {
+        // Re-trigger CSS animation on the header
+        const header = document.querySelector<HTMLElement>('.projects-header');
+        if (header) {
+          header.style.animation = 'none';
+          header.offsetHeight; // reflow
+          header.style.animation = '';
+        }
 
-      tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-          tabs.forEach(t => t.classList.remove('active'));
-          tab.classList.add('active');
-          const filter = (tab as HTMLElement).dataset.filter;
-          cards.forEach(card => {
-            if (filter === 'all' || (card as HTMLElement).dataset.category === filter) {
-              card.classList.remove('hidden');
-            } else {
-              card.classList.add('hidden');
-            }
+        const tabs = document.querySelectorAll('.filter-tab');
+        const cards = document.querySelectorAll('.project-card-wrapper');
+
+        tabs.forEach(tab => {
+          tab.addEventListener('click', () => {
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            const filter = (tab as HTMLElement).dataset.filter;
+            cards.forEach(card => {
+              if (filter === 'all' || (card as HTMLElement).dataset.category === filter) {
+                card.classList.remove('hidden');
+              } else {
+                card.classList.add('hidden');
+              }
+            });
           });
         });
-      });
+      }
+
+      initProjects();
+      document.addEventListener('astro:page-load', initProjects);
     </script>
   </body>
 </html>

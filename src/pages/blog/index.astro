@@ -304,58 +304,65 @@ const allTags = [...new Set(posts.flatMap(p => p.data.tags ?? []))].sort();
 		<Footer />
 
 		<script>
-			const searchInput = document.getElementById('search') as HTMLInputElement;
-			const sortSelect = document.getElementById('sort') as HTMLSelectElement;
-			const list = document.getElementById('posts-list') as HTMLUListElement;
-			const noResults = document.getElementById('no-results') as HTMLParagraphElement;
-			const tagBtns = Array.from(document.querySelectorAll<HTMLButtonElement>('#tag-filters .tag-btn'));
+			function initBlog() {
+				const searchInput = document.getElementById('search') as HTMLInputElement;
+				const sortSelect = document.getElementById('sort') as HTMLSelectElement;
+				const list = document.getElementById('posts-list') as HTMLUListElement;
+				const noResults = document.getElementById('no-results') as HTMLParagraphElement;
+				const tagBtns = Array.from(document.querySelectorAll<HTMLButtonElement>('#tag-filters .tag-btn'));
 
-			let activeTag = '';
+				if (!searchInput || !list) return;
 
-			function getItems() {
-				return Array.from(list.querySelectorAll<HTMLLIElement>('li'));
+				let activeTag = '';
+
+				function getItems() {
+					return Array.from(list.querySelectorAll<HTMLLIElement>('li'));
+				}
+
+				function applyFilters() {
+					const query = searchInput.value.toLowerCase().trim();
+					const sortVal = sortSelect.value;
+
+					let items = getItems();
+
+					// Filter
+					items.forEach(item => {
+						const title = item.dataset.title ?? '';
+						const desc = item.dataset.desc ?? '';
+						const tags: string[] = JSON.parse(item.dataset.tags ?? '[]');
+						const textMatch = !query || title.includes(query) || desc.includes(query);
+						const tagMatch = !activeTag || tags.includes(activeTag);
+						item.style.display = textMatch && tagMatch ? '' : 'none';
+					});
+
+					// Sort visible items
+					const visible = items.filter(i => i.style.display !== 'none');
+					visible.sort((a, b) => {
+						if (sortVal === 'newest') return Number(b.dataset.date) - Number(a.dataset.date);
+						if (sortVal === 'oldest') return Number(a.dataset.date) - Number(b.dataset.date);
+						if (sortVal === 'az') return (a.dataset.title ?? '').localeCompare(b.dataset.title ?? '');
+						if (sortVal === 'za') return (b.dataset.title ?? '').localeCompare(a.dataset.title ?? '');
+						return 0;
+					});
+					visible.forEach(item => list.appendChild(item));
+
+					noResults.style.display = visible.length === 0 ? 'block' : 'none';
+				}
+
+				tagBtns.forEach(btn => {
+					btn.addEventListener('click', () => {
+						activeTag = btn.dataset.tag ?? '';
+						tagBtns.forEach(b => b.classList.toggle('active', b.dataset.tag === activeTag));
+						applyFilters();
+					});
+				});
+
+				searchInput.addEventListener('input', applyFilters);
+				sortSelect.addEventListener('change', applyFilters);
 			}
 
-			function applyFilters() {
-				const query = searchInput.value.toLowerCase().trim();
-				const sortVal = sortSelect.value;
-
-				let items = getItems();
-
-				// Filter
-				items.forEach(item => {
-					const title = item.dataset.title ?? '';
-					const desc = item.dataset.desc ?? '';
-					const tags: string[] = JSON.parse(item.dataset.tags ?? '[]');
-					const textMatch = !query || title.includes(query) || desc.includes(query);
-					const tagMatch = !activeTag || tags.includes(activeTag);
-					item.style.display = textMatch && tagMatch ? '' : 'none';
-				});
-
-				// Sort visible items
-				const visible = items.filter(i => i.style.display !== 'none');
-				visible.sort((a, b) => {
-					if (sortVal === 'newest') return Number(b.dataset.date) - Number(a.dataset.date);
-					if (sortVal === 'oldest') return Number(a.dataset.date) - Number(b.dataset.date);
-					if (sortVal === 'az') return (a.dataset.title ?? '').localeCompare(b.dataset.title ?? '');
-					if (sortVal === 'za') return (b.dataset.title ?? '').localeCompare(a.dataset.title ?? '');
-					return 0;
-				});
-				visible.forEach(item => list.appendChild(item));
-
-				noResults.style.display = visible.length === 0 ? 'block' : 'none';
-			}
-
-			tagBtns.forEach(btn => {
-				btn.addEventListener('click', () => {
-					activeTag = btn.dataset.tag ?? '';
-					tagBtns.forEach(b => b.classList.toggle('active', b.dataset.tag === activeTag));
-					applyFilters();
-				});
-			});
-
-			searchInput.addEventListener('input', applyFilters);
-			sortSelect.addEventListener('change', applyFilters);
+			initBlog();
+			document.addEventListener('astro:page-load', initBlog);
 		</script>
 	</body>
 </html>
