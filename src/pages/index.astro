@@ -1,0 +1,58 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Hero from '../components/Hero.astro';
+import SkillsSnapshot from '../components/SkillsSnapshot.astro';
+import FeaturedProjects from '../components/FeaturedProjects.astro';
+import '../styles/homepage.css';
+
+const title = "Sudhanshu Kashyap - Software Engineer";
+const description = "Personal portfolio of Sudhanshu Kashyap - Software Engineer, Open Source Contributor, FreeBSD developer.";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={title} description={description} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="homepage-light">
+    <Header />
+    <main class="homepage-main">
+      <Hero />
+      <SkillsSnapshot />
+      <FeaturedProjects />
+      <section class="personal-blurb fade-in-up">
+        <div class="section-container">
+          <h2 class="section-title">About me</h2>
+          <p class="blurb-text">
+            I'm Sudhanshu — engineer by day, open-source contributor by night. I work on big data infrastructure
+            at JP Morgan Chase, contribute to FreeBSD, and build things for fun. I play guitar, read too many
+            books, and occasionally miss playing on my Minetest servers.
+          </p>
+          <a href="/about" class="blurb-link">→ More about me</a>
+        </div>
+      </section>
+    </main>
+    <Footer />
+    <script>
+      // Fade-in-up on scroll for sections
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+
+      document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
+    </script>
+  </body>
+</html>

@@ -1,0 +1,25 @@
+---
+const skills = [
+  { category: "Languages", items: "Python, Lua, C++, Go, Java, SQL" },
+  { category: "Backend", items: "FastAPI, Flask, Spring Boot" },
+  { category: "Big Data", items: "PySpark, Spark, Databricks, Structured Streaming, Pandas" },
+  { category: "Streaming & Cloud", items: "AWS Kinesis/SQS/SNS, Airflow, NiFi, Terraform, Docker, Kubernetes" },
+  { category: "Databases", items: "PostgreSQL, DynamoDB, Redis, Teradata" },
+  { category: "Infra & Networking", items: "Nginx, Kong, Cloudflare, Reverse Proxies" },
+  { category: "AI & LLMs", items: "MCP Servers, Agent Orchestration, RAG Pipelines, Prompt Engineering" },
+];
+---
+
+<section class="skills-snapshot fade-in-up">
+  <div class="section-container">
+    <h2 class="section-title">Skills &amp; Technologies</h2>
+    <div class="skills-grid">
+      {skills.map(skill => (
+        <div class="skill-card">
+          <span class="skill-category">{skill.category}</span>
+          <p class="skill-items">{skill.items}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

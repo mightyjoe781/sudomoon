@@ -1,0 +1,65 @@
+---
+const projects = [
+  {
+    title: "BootBaker - FreeBSD Bootloader CI Harness",
+    description: "Built a CI test harness for FreeBSD bootloader validation across all first and second-tier architectures as part of Google Summer of Code 2023.",
+    tech: ["Python", "Lua", "Jenkins", "GitHub Actions", "FreeBSD"],
+    category: "Open Source",
+    links: [
+      { label: "GitHub", url: "https://github.com/mightyjoe781/bootbaker" },
+      { label: "GSoC 2023", url: "https://summerofcode.withgoogle.com/programs/2023/projects/aa1ptICD" },
+      { label: "FreeBSD Wiki", url: "https://wiki.freebsd.org/SummerOfCode2023Projects/CITestHarnessForBootloader" },
+    ],
+  },
+  {
+    title: "Minetest Servers - Prismo & Adventure Time",
+    description: "Operated two Minetest servers (Prismo, Adventure Time) with custom Lua mods including guilds, censoring, and web bridge systems. Bare-metal hosting, community management.",
+    tech: ["C++", "Lua", "Linux", "Bare-metal"],
+    category: "Game Dev / Open Source",
+    links: [
+      { label: "Prismo Discord", url: "https://discord.gg/NQvCBhy9pu" },
+      { label: "Adventure Time Discord", url: "https://discord.gg/prEGExvPja" },
+    ],
+  },
+  {
+    title: "Knowledge Repository - Self-Hosted Dev Platform",
+    description: "Self-hosted notes and algorithms platform running on bare-metal Linux. Nginx + Cloudflare, Docker + Portainer, Grafana + Loki observability stack.",
+    tech: ["Docker", "Nginx", "Cloudflare", "Grafana", "Loki", "Python"],
+    category: "Systems / DevOps",
+    links: [
+      { label: "notes.sudomoon.com", url: "https://notes.sudomoon.com" },
+      { label: "algo.sudomoon.com", url: "https://algo.sudomoon.com" },
+    ],
+  },
+];
+---
+
+<section class="featured-projects fade-in-up">
+  <div class="section-container">
+    <h2 class="section-title">Featured Projects</h2>
+    <div class="projects-grid">
+      {projects.map(project => (
+        <article class="project-card">
+          <div class="project-header">
+            <span class="project-category">{project.category}</span>
+            <h3 class="project-title">{project.title}</h3>
+          </div>
+          <p class="project-description">{project.description}</p>
+          <div class="project-tech">
+            {project.tech.map(tag => (
+              <span class="tech-tag">{tag}</span>
+            ))}
+          </div>
+          <div class="project-links">
+            {project.links.map(link => (
+              <a href={link.url} target="_blank" rel="noopener noreferrer" class="project-link">{link.label}</a>
+            ))}
+          </div>
+        </article>
+      ))}
+    </div>
+    <div class="projects-footer">
+      <a href="/projects" class="see-all-link">See all projects →</a>
+    </div>
+  </div>
+</section>
