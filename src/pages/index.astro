@@ -42,17 +42,27 @@ const description = "Personal portfolio of Sudhanshu Kashyap - Software Engineer
     </main>
     <Footer />
     <script>
-      // Fade-in-up on scroll for sections
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.1 });
+      function initFadeObserver() {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.1 });
 
-      document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
+        document.querySelectorAll('.fade-in-up').forEach(el => {
+          // Reset so re-navigation re-animates
+          el.classList.remove('visible');
+          observer.observe(el);
+        });
+      }
+
+      // Initial load
+      initFadeObserver();
+      // ViewTransitions re-navigation
+      document.addEventListener('astro:page-load', initFadeObserver);
     </script>
   </body>
 </html>
