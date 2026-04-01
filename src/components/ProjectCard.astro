@@ -1,0 +1,36 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+}
+
+const { project } = Astro.props;
+const { title, description, tech, category, links } = project.data;
+
+const categoryLabels: Record<string, string> = {
+  'open-source': 'Open Source',
+  'systems': 'Systems',
+  'game-dev': 'Game Dev',
+  'web': 'Web',
+  'ai': 'AI / LLM',
+};
+---
+
+<article class="project-card">
+  <div class="project-card-category">{categoryLabels[category] ?? category}</div>
+  <h3 class="project-card-title">
+    <a href={`/projects/${project.slug}`}>{title}</a>
+  </h3>
+  <p class="project-card-description">{description}</p>
+  <div class="project-card-tech">
+    {tech.map((t) => <span class="tech-tag">{t}</span>)}
+  </div>
+  {links.length > 0 && (
+    <div class="project-card-links">
+      {links.map((link) => (
+        <a href={link.url} target="_blank" rel="noopener noreferrer">{link.label}</a>
+      ))}
+    </div>
+  )}
+</article>

@@ -1,0 +1,68 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/projects.css';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+}
+
+const { project } = Astro.props;
+const { title, description, tech, category, links, date } = project.data;
+
+const categoryLabels: Record<string, string> = {
+  'open-source': 'Open Source',
+  'systems': 'Systems',
+  'game-dev': 'Game Dev',
+  'web': 'Web',
+};
+
+const formattedDate = new Date(date).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+});
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={title} description={description} />
+  </head>
+  <body>
+    <Header />
+    <main>
+      <div class="project-layout">
+        <a href="/projects" class="project-back-link">← All Projects</a>
+
+        <div class="project-layout-hero">
+          <div class="category-badge">{categoryLabels[category] ?? category}</div>
+          <h1>{title}</h1>
+          <div class="project-date">{formattedDate}</div>
+          <div class="tech-tags">
+            {tech.map((t) => <span class="tech-tag">{t}</span>)}
+          </div>
+        </div>
+
+        <div class="project-layout-body">
+          <slot />
+        </div>
+
+        {links.length > 0 && (
+          <div class="project-layout-links">
+            <h2>Links</h2>
+            <ul>
+              {links.map((link) => (
+                <li>
+                  <a href={link.url} target="_blank" rel="noopener noreferrer">{link.label}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+    </main>
+    <Footer />
+  </body>
+</html>

@@ -1,0 +1,68 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import '../../styles/projects.css';
+
+const allProjects = (await getCollection('projects')).sort(
+  (a, b) => a.data.priority - b.data.priority
+);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title="Projects - sudomoon" description="A collection of projects by Sudhanshu Kashyap - open source, systems, game dev, and web." />
+  </head>
+  <body>
+    <Header />
+    <main>
+      <div class="projects-page">
+        <div class="projects-header fade-in-up">
+          <h1>Projects</h1>
+          <p>A selection of things I've built - from open-source infrastructure to game servers and web apps.</p>
+        </div>
+
+        <div class="filter-tabs">
+          <button class="filter-tab active" data-filter="all">All</button>
+          <button class="filter-tab" data-filter="open-source">Open Source</button>
+          <button class="filter-tab" data-filter="systems">Systems</button>
+          <button class="filter-tab" data-filter="game-dev">Game Dev</button>
+          <button class="filter-tab" data-filter="web">Web</button>
+          <button class="filter-tab" data-filter="ai">AI / LLM</button>
+        </div>
+
+        <div class="projects-grid">
+          {allProjects.map((project) => (
+            <div class="project-card-wrapper" data-category={project.data.category}>
+              <ProjectCard project={project} />
+            </div>
+          ))}
+        </div>
+      </div>
+    </main>
+    <Footer />
+
+    <script>
+      const tabs = document.querySelectorAll('.filter-tab');
+      const cards = document.querySelectorAll('.project-card-wrapper');
+
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          tabs.forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          const filter = (tab as HTMLElement).dataset.filter;
+          cards.forEach(card => {
+            if (filter === 'all' || (card as HTMLElement).dataset.category === filter) {
+              card.classList.remove('hidden');
+            } else {
+              card.classList.add('hidden');
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
