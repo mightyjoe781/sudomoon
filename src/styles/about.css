@@ -1,0 +1,95 @@
+.about-main {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 4rem 1.5rem 6rem;
+}
+
+.about-main h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 1.5rem;
+}
+
+.about-main h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1a1a2e;
+  margin: 3rem 0 1rem;
+  letter-spacing: -0.01em;
+}
+
+.about-main p {
+  color: #374151;
+  line-height: 1.8;
+  margin-bottom: 1.1rem;
+  font-size: 1.0625rem;
+}
+
+.about-main a {
+  color: #6741d9;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(103, 65, 217, 0.3);
+  transition: border-color 0.15s;
+}
+
+.about-main a:hover {
+  border-color: #6741d9;
+}
+
+/* Timeline */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border-left: 2px solid #e5e7eb;
+  margin-left: 0.5rem;
+  padding-left: 0;
+}
+
+.timeline-entry {
+  position: relative;
+  padding: 0 0 2rem 2rem;
+}
+
+.timeline-entry::before {
+  content: '';
+  position: absolute;
+  left: -5px;
+  top: 6px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #6741d9;
+}
+
+.timeline-date {
+  display: block;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.78rem;
+  color: #6741d9;
+  margin-bottom: 0.35rem;
+  letter-spacing: 0.01em;
+}
+
+.timeline-content strong {
+  display: block;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1a1a2e;
+  margin-bottom: 0.25rem;
+}
+
+.timeline-content p {
+  margin-bottom: 0;
+  font-size: 0.9375rem;
+  color: #6b7280;
+}
+
+/* Contact section */
+.about-contact {
+  border-top: 1px solid #e5e7eb;
+  margin-top: 3rem;
+  padding-top: 2rem;
+}
+
